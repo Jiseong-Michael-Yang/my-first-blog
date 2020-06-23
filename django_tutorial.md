@@ -88,3 +88,60 @@
 
 ## 9. 장고 Template
 * `blog/tempaltes/blog`에 템플릿 파일 생성(HTML)
+* 변경사항 Git에 `commit` 후 Pythonanywhere에서 `pull`
+* 페이지 reload 후 확인
+
+## 10.장고 ORM과 쿼리셋(QuerySets)
+* 장고를 데이터베이스에 연결하여 데이터를 저장
+* 쿼리셋이란?
+  * 전달받은 모델의 객체 목록
+  * 쿼리셋은 데이터베이스로부터 데이터를 읽고, 필터를 걸거나 정렬할 수 있음
+1. 장고 쉘(Shell)
+    * `python manage.py shell`
+    * `InteractiveConsole` 실행
+2. 모든 객체 조회
+    * `blog.models`에서 `Post` 모델 불러오기: `from blog.models import Post`
+    * 게시글 목록 확인: `Post.objects.all()`
+3. 객체 생성 
+    * `User` 모델의 인스턴스를 가져와 `me` 변수에 전달
+      * `User` 모델 불러오기: `from django.contrib.auth.models import User`
+      * 사용자 확인: `User.objects.all()`
+      * `me = User.objects.get(username="admin")`
+    * 새 글 생성: `Post.objects.create(author=me, title='Sample title", text='Test')`
+    * 글 확인: `Post.objects.all()`
+3. 필터링
+   * 쿼리셋의 중요한 기능은 데이터를 필터링하는 것
+   * 작성자가 `me`인 모든 글 찾기: `Post.objects.filter(author=me)`
+   * 제목에 'title'이라는 글자가 들어간 글 찾기: `Post.objects.filter(title__contains="title")`
+   * 과거에 작성한 글 찾기: `Post.objects.filter(published_date__lte=timezone.now())`
+     * `InteractiveConsole`에서 추가한 게시글은 보이지 않음
+     * 게시하려는 게시물의 인스터를 얻은 후 게시
+       * `post = Post.objects.get(title="Sample title")`
+       * `post.publish`
+       * 글 확인: `Post.objects.filter(published_date__lte=timezone.now())`
+4. 정렬하기
+    * 생성 날짜별 내림차순: `Post.objects.order_by('-created_date')`
+    * 생성 날짜별 오름차순: `Post.objects.order_by('created_date')`
+5. 쿼리셋 연결하기
+      * 생성 시간대로 찾고 게시 순서대로 정렬 `Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')`
+6. 종료: `exit()`
+
+## 10. 템플릿 동적 데이터
+* `blog` 글의 구조
+  * `Post` 모델: `models.py`
+  * `post_list` 모델: `views.py`
+  * 템플릿: ??
+* View는 모델과 템플릿을 연결하는 역할
+    * 일반적으로 view가 템플릿에서 모델을 선택하도록 만들어야 한다
+1. `blog/views.py`에서 `post_list` 뷰 내용 보기
+   * 각각 다른 장소에 있는 모델을 모아주기: `from .models import Post`
+   * `Post` 모델에서 블로그 글을 가져오기 위해서는 `post_list`에서 쿼리셋이 필요
+
+## 11. 장고 템플릿
+* HTML에 Python 코드를 바로 넣을 수 없기 때문에 템플릿 태그가 필요하다
+* 템플릿 태그는 Python을 HTML로 바꿔주어 빠르고 쉽게 동적인 웹 사이트를 만들 수 있게 도와준다
+1. Post 목록 템플릿 보여주기
+    * View의 `post_list`에서 `posts`변수를 템플릿에 넘겨주었다
+    * 이제 `posts` 변수를 받아 HTML에 나타나도록 해 볼 차례다
+    * 장고 템플릿 안에 있는 값을 출력하려면, 변수 이름 안에 중괄호를 넣어 표시해야 한다: `{{ posts }}`
+2. HTML과 템플릿 태그를 섞어 정적 블로그 게시물이 보이게 할 수 있다
