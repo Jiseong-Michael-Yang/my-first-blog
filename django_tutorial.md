@@ -52,3 +52,39 @@
 4. `Post` 모델 확인
     * 슈퍼사용자 생성: `python manage.py createsuperuser`
     * 로그인: http://127.0.0.1:8000/admin/
+
+## 6. 배포하기
+1. GitHub
+    1. 로컬에서 작업한 파일을 Git repository에 commit
+    2. `.gitignore` 파일 생성
+2. Pythonanywhere
+    1. Console에서 repository 복사: `git clone https://github.com/Jiseong-Michael-Yang/my-first-blog`
+    2. 파일 확인: `tree my-first-blog`
+    3. 가상환경
+         * 생성: `virtualenv --python=python3.7 tutorial`
+         * 활성화: `source tutorial/bin/activate`
+    4. 데이터베이스 생성
+       * 데이터베이스 초기화: `python manage.py migrate`
+    5. Web app으로 `blog` 배포
+        * Pythonanywhere에 코드 복사, 가상환경·정적파일 준비, 데이터베이스 초기화
+        * Pythonanywere > Web > Add a new web app
+    6. 가상환경 설정
+        * Pythonanywhere > Web > Virtualenv
+    7. WSGI 파일 설정하기
+         * WSGI 프로토콜
+           * Python을 이용한 웹사이트를 서비스하기 위한 표준
+           * Django는 WSGI 프로토콜을 사용해 작동
+           * WSGI 설정 파일을 우리가 만든 장고 `blog`를 Pythonanywhere에서 인식하도록 수정 (Pythonanywhere > Web > Code > WSGI configuration file)
+
+## 7. 장고 URLs
+1. 첫번째 Django URL 만들기
+   * `mysite/urls.py` 파일을 깨끗한 상태로 유지하기 위해 `blog` app에서 메인 `mysite/urls.py` 파일로 url을 가져옴
+
+## 8. 장고 View 만들기
+* `View`는 app의 '로직'을 넣는 곳
+* `Model`에서 필요한 정보를 받아와 `Template`에 전달하는 역할
+* `blog/views.py`에서 `request`를 받아와 `post_list.html` 템플릿을 호출하는 함수 정의 
+* `blog/urls.py`에서는 http://127.0.0.1:8000/으로 접속했을 때 `views.post_list`를 호출하도록 정의
+
+## 9. 장고 Template
+* `blog/tempaltes/blog`에 템플릿 파일 생성(HTML)
