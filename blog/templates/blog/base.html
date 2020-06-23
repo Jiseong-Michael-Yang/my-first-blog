@@ -1,0 +1,30 @@
+<!-- 본 파일을 홈페이지 전체에서 재활용하는 기본 HTML로 지정 -->
+<!-- 정적 파일을 로딩 -->
+{% load static %}
+
+<html>
+    <head>
+        <title>Django Girls blog</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <!-- 정적 파일의 위치는 다음과 같다; 장고는 CSS 파일의 위치를 알고 있다 (상대경로 불필요) -->
+        <link rel="stylesheet" href="{% static 'css/blog.css' %}">
+        <!-- 폰트 추가 -->
+        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <div class="page-header">
+            <h1><a href="">Django Girls Blog</a></h1>
+        </div>
+        <!-- 장고가 {{ post }}를 객체 목록으로 이해하고 처리 -->
+        <div class="content container">
+            <div class="row">
+                <div class="col-md-8">
+                    <!-- 해당 부분에 컨텐츠를 넣을 것; block content를 시작하고 종료한다 -->
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

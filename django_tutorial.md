@@ -145,3 +145,56 @@
     * 이제 `posts` 변수를 받아 HTML에 나타나도록 해 볼 차례다
     * 장고 템플릿 안에 있는 값을 출력하려면, 변수 이름 안에 중괄호를 넣어 표시해야 한다: `{{ posts }}`
 2. HTML과 템플릿 태그를 섞어 정적 블로그 게시물이 보이게 할 수 있다
+3. PythonAnywhere에서 코드를 불러와도 로컬 서버에 호스팅 된 블로그에 나타나는 게시물과 일치하지 않는다
+    * 로컬 컴퓨터와 PythonAnywhere의 데이터베이스는 동기화되지 않는다
+
+## 12. CSS
+1. 부트스트랩
+    * HTML과 CSS 프레임워크로 미적인 웹사이트를 만들 수 있다
+    * 설치: `.html` 파일 내 `<head>`에 이 링크를 넣어야 한다
+      * `<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">`
+      * `<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">`
+2. 정적 파일
+   * CSS와 이미지 파일에 해당
+   * 요청내용에 따라 바뀌는 것이 아니기 때문에 모든 사용자들이 동일한 내용을 볼 수 있다
+1. 정적 파일의 위치
+    * 장고는 `admin` app에서 정적 파일을 어디에서 찾아야 하는지 이미 알고 있다
+    * `blog` app에 `static`이라는 폴더 추가
+2. CSS 파일
+   * `static` 디렉토리 안에 `css`라는 새로운 디렉토리 생성
+   * `css` 디렉토리 안에 `blog.css`라는 파일 생성
+3. 부트스트랩을 이용하여 정적 파일 로딩
+   * 제일 첫 줄에 정적 파일 로딩 선언: `{% load static %}`
+   * `<head>`와 `</head>` 사이에 부트스트랩 CSS 파일 링크 추가
+     * `<link rel="stylesheet" href="{% static 'css/blog.css' %}">`
+   * 폰트 바꾸기
+     * `<head>`와 `</head>` 사이에 `<link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">` 추가
+     * `css/blog.css`에서 `h1 a` 선언블록에 `font-family: 'Lobster'` 추가하고 새로고침
+   * CSS 선택자들을 활용하여 HTML 태그에 접근
+  
+## 13. 템플릿 확장하기
+* 웹 사이트 안의 서로 다른 페이지에서 HTML의 일부를 재사용 가능
+1. 기본 템플릿 생성하기
+   * `blog/templates/blog/`에 `base.html` 파일 생성
+   * 홈페이지 전체에 걸쳐 재사용되는 부분을 제외하고 상황에 맞는 컨텐츠가 들어갈 자리를 지정
+     * `{% block content %}`
+        `{% endblock %}`
+    * 컨텐츠에 해당하는 HTML 파일에서는 컨텐츠에 해당하는 부분 위 아래로 블록 선언
+      * `{% block content %}`
+        `<!-- 컨텐츠 내용 -->`
+        `{% endblock %}`
+    * 두 템플릿의 연결
+      * 컨텐츠가 들어가는 HTML 파일의 첫 줄에 확장 선언: `{% extends 'blog/base.html' %}`
+
+## 14. 프로그램 애플리케이션 확장하기
+1. `Post`에 템플릿 링크 만들기
+    * 태그의 `href` 속성에 값 지정
+      * `{% url 'post_detail' pk=post.pk %}`
+      * 이 태그의 `url`은 `post_detail` 뷰를 실행시키고, 각 레코드의 고유값은 `post.pk` 로 접근한다
+2. `Post` 상세 페이지 URL 만들기
+    * `post_detail` 뷰가 보이게 `urls.py`에 URL 만들기
+    * 첫 게시물의 상세 페이지 URL: http://127.0.0.1:8000/post/1/
+    * `blog.urls`에 다음 규칙 추가
+      * `path('post/<int: k>/, views.post_detail, name="post_detail")`
+      * http://127.0.0.1:8000을 통한 접속에서 뒤에 post와 정수인 k로 이루어진 URL 패턴이 발견되면
+      * `post_detail` 뷰로 요청을 보내 쿼리셋을 통해 게시글 상세 페이지 템플릿을 보여줄 것

@@ -1,19 +1,17 @@
-<html>
-    <head>
-        <title>Django Girls blog</title>
-    </head>
-    <body>
-        <div>
-            <h1><a href="">Django Girls Blog</a></h1>
-        </div>
-        <!-- 장고가 {{ post }}를 객체 목록으로 이해하고 처리 -->
-        {% for post in posts %}
-        <div>
-            <p>published: {{post.published_date}} </p>
-            <h1><a href="">{{ post.title }}</a></h1>
+<!-- 본 파일은 base.html을 확장한다 -->
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    {% for post in posts %}
+        <div class="post">
+            <p class="date">published: {{post.published_date}} </p>
+            <!-- post_detail의 뷰 경로는 blog.vews.post_detail -->
+            <!-- post.pk는 데이터베이스의 각 레코드를 식별하는 기본키(primary key); 게시물이 추가될 때마다 그 값이 1씩 증가 -->
+            <h1>
+                <!-- # 장고가 post_detail이라는 이름을 해석할 때 blog/views.py 내부의 post_detail 함수로 이해 -->
+                <a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
             <!-- 파이프 문자(|): 텍스트에서 행이 바뀌면 문단으로 변환 -->
             <p>{{ post.text|linebreaksbr }}</p>
         </div>    
-        {% endfor %}
-    </body>
-</html>
+    {% endfor %}
+{% endblock %}
