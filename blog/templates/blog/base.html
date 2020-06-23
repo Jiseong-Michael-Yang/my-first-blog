@@ -15,6 +15,11 @@
     <body>
         <div class="page-header">
             <h1><a href="">Django Girls Blog</a></h1>
+            {% if user.is_authenticaetd %}
+            <a href="{% url 'post_new' %}" class="top-menu">
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+            {% endif %}
         </div>
         <!-- 장고가 {{ post }}를 객체 목록으로 이해하고 처리 -->
         <div class="content container">

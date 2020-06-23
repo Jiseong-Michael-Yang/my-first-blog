@@ -1,0 +1,13 @@
+{% extends 'blog/base.html' %}
+
+{% block content%}
+    <h1>New post</h1>
+    <form method="POST" class="post-form">
+        <!-- 보안 토큰 -->
+        {% csrf_token %}
+        <!-- 폼 보여주기 -->
+        {{ form.as_p }}
+        <!-- 저장 버튼 -->
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+{% endblock %}

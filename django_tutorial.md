@@ -198,3 +198,53 @@
       * `path('post/<int: k>/, views.post_detail, name="post_detail")`
       * http://127.0.0.1:8000을 통한 접속에서 뒤에 post와 정수인 k로 이루어진 URL 패턴이 발견되면
       * `post_detail` 뷰로 요청을 보내 쿼리셋을 통해 게시글 상세 페이지 템플릿을 보여줄 것
+
+## 15. 장고 폼
+* 블로그 글을 추가하거나 수정하는 기능
+* 폼(양식, forms)으로 강력한 인터페이스를 만들 수 있다
+* 아무런 준비 없이도 양식을 만들 수 있고 `ModelForm`을 생성해 자동으로 모델에 결과물 저장 가능
+1. 폼을 만들어서 `Post` 모델에 적용
+   * `blog` 디렉토리 안에 `form.py` 파일 생성
+       * `forms`와 `Post` import
+       * `PostForm` 클래스를 생성하고 `forms.ModelForm`을 상속시킴으로서 장고에게 이 클래스가 폼이라는 것을 알려주기
+       * `class Meta` 구문에 우리가 이 폼을 만들기 위해 사용할 `model`과 `fields`를 알려주기
+   * URL에 연결
+      * `/post/new`을 `post_new` 뷰에 보내고 이름은 `post_new`로 지정
+   * View 생성
+       * `post_new` 뷰를 생성
+       * 미리 정의한 `PostForm` 변수 할당: `form = PostForm`
+       * 매개변수 `form`을 템플릿 `post_edit.html`에 넘겨주기
+   * 템플릿 생성
+       * `'base.html'`에 확장
+      * 폼 및 버튼 생성
+2. 폼 저장하기
+    * `post_new` 뷰를 불러온다
+    * `method="POST"`의 의미
+      * 우리가 입력했던 데이터를 `request.POST`에 저장할 것
+      * 여기서 `POST`는 글을 등록하는 것을 의미
+    * `post_new`의 두 가지 상황
+        1. 폼에 첫 글을 작성할 때
+        2. 폼에 입력된 데이터를 view 페이지로 가져올 때
+            * 폼을 생성하고 `request.Post`를 넘겨주기
+            * 폼의 값이 올바른 경우
+              * 폼 저장
+              * 사용자 저장
+              * 게시일 저장
+              * 변동사항 저장
+3. 폼 저장 후 `post_detail` 페이지로 이동
+    * `from django.shorcuts import redirect` 추가
+    * `return redirect('post_detail', pk=post.pk)`
+4. 폼 검증하기
+* 블로그 글에는 `title`과 `text`가 반드시 있어야 한다
+* `Post` 모델에서는 이 값들이 필요 없다고 했지만, 장고는 모두 기본 값으로 설정되어 있다고 간주
+5. 폼 수정하기
+    * `post_detail.html`에서 수정 버튼 추가
+    * `post_edit` URL 추가
+    * `post_edit` 뷰 추가
+      * 글을 새로 쓰는 경우: 첫 번째 `if`문에서 `form = PostForm(request.POST, instance=post)`
+      * 있던 글을 수정하는 경우: 첫 번째 `if`문에 대한 `else`문에서 `form = PostForm(instance=post)`
+6. 보안
+* 웹 사이트에는 나에게만 보이고 다른 사람에게는 보이지 않는 기능이 필요
+* 글 추가, 수정 버튼에 대해서 `if`문 추가
+  * `{% if.user.is_authenticated %}`
+  `{% endif %}`

@@ -17,5 +17,15 @@ urlpatterns = [
         # post_detail 뷰로 보내 게시글이 보일 수 있게 함
         views.post_detail, \
         # 장고가 post_detail이라는 이름을 해석할 때 blog/views.py 내부의 post_detail 함수로 이해
-        name="post_detail")
+        name="post_detail"),
+    path(
+        "post/new", \
+        views.post_new, \
+        name="post_new"
+    ),
+    path(
+        "post/<int:pk>/edit/", \
+        views.post_edit, \
+        name="post_edit"
+    )
 ]
